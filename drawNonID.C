@@ -48,13 +48,12 @@ void getHist (const char* infilename, Int_t rWrite, int cent) {
 	int iMonth=(iDate%10000)/100;
 	int iDay=iDate%100;
 	char* cMonth[12]={"Jan","Feb","Mar","Apr","May","Jun",
-			  "Jul","Aug","Sep","Oct","Nov","Dec"};
+                      "Jul","Aug","Sep","Oct","Nov","Dec"};
 	char cStamp1[25],cStamp2[25];
 	sprintf(cStamp1,"%i %s %i",iDay, cMonth[iMonth-1], iYear);
 	sprintf(cStamp2,"%i/%.2d/%i",iDay, iMonth, iYear);
 
 	TCanvas *c1=new TCanvas("c1",cStamp1,1024,768);
-//	TCanvas *c1=new TCanvas("c1",cStamp1,1024,768);
 	c1->SetFillColor(10);
 	TPad *pad1=new TPad("pad1","this is pad1",0.01,0.67,0.66,0.99);
 	TPad *pad3=new TPad("pad3","this is pad3",0.01,0.34,0.66,0.66);
@@ -79,22 +78,27 @@ void getHist (const char* infilename, Int_t rWrite, int cent) {
 	pad1->SetRightMargin(0.01);
 	pad1->SetTopMargin(0.01);
 	pad1->SetBottomMargin(0.14);
+
 	pad2->SetLeftMargin(0.11);
 	pad2->SetRightMargin(0.01);
 	pad2->SetTopMargin(0.01);
 	pad2->SetBottomMargin(0.14);
+
 	pad3->SetLeftMargin(0.07);
 	pad3->SetRightMargin(0.01);
 	pad3->SetTopMargin(0.01);
 	pad3->SetBottomMargin(0.14);
+
 	pad4->SetLeftMargin(0.11);
 	pad4->SetRightMargin(0.01);
 	pad4->SetTopMargin(0.01);
 	pad4->SetBottomMargin(0.14);
+
 	pad5->SetLeftMargin(0.07);
 	pad5->SetRightMargin(0.01);
 	pad5->SetTopMargin(0.01);
 	pad5->SetBottomMargin(0.13);
+
 	pad6->SetLeftMargin(0.11);
 	pad6->SetRightMargin(0.01);
 	pad6->SetTopMargin(0.01);
@@ -131,13 +135,14 @@ void getHist (const char* infilename, Int_t rWrite, int cent) {
 	//for (int i = 1; i < 7; ++i) {		// kT
 	//zmieniac 1-2, 3-4, 5-6
 	for (int j = cent; j < cent+1; ++j) {		// cent
+
 		cout<<j<<endl;
 		// sprintf(numNamePout,"nump");
 		// sprintf(numNameNout,"numn");
 		// sprintf(denNamePout,"denp");
 		// sprintf(denNameNout,"denn");
 		sprintf(numNamePout,"NumOutPckstarPAPtpcM%d",j-1);
-		cout<<numNamePout<<endl;
+		// cout<<numNamePout<<endl;
 		sprintf(numNameNout,"NumOutNckstarPAPtpcM%d",j-1);
 		sprintf(denNamePout,"DenOutPckstarPAPtpcM%d",j-1);
 		sprintf(denNameNout,"DenOutNckstarPAPtpcM%d",j-1);
@@ -165,18 +170,18 @@ void getHist (const char* infilename, Int_t rWrite, int cent) {
 		denp[j-1][2] = (TH1D*)f->Get(denNamePlong);
 		denn[j-1][2] = (TH1D*)f->Get(denNameNlong);
 
-		    nump[j-1][0] -> Rebin(rbPAP);
-		    numn[j-1][0] -> Rebin(rbPAP);
-		    denp[j-1][0] -> Rebin(rbPAP);
-		    denn[j-1][0] -> Rebin(rbPAP);
-		    nump[j-1][1] -> Rebin(rbPAP);
-		    numn[j-1][1] -> Rebin(rbPAP);
-		    denp[j-1][1] -> Rebin(rbPAP);
-		    denn[j-1][1] -> Rebin(rbPAP);
-		    nump[j-1][2] -> Rebin(rbPAP);
-		    numn[j-1][2] -> Rebin(rbPAP);
-		    denp[j-1][2] -> Rebin(rbPAP);
-		    denn[j-1][2] -> Rebin(rbPAP);
+        nump[j-1][0] -> Rebin(rbPAP);
+        numn[j-1][0] -> Rebin(rbPAP);
+        denp[j-1][0] -> Rebin(rbPAP);
+        denn[j-1][0] -> Rebin(rbPAP);
+        nump[j-1][1] -> Rebin(rbPAP);
+        numn[j-1][1] -> Rebin(rbPAP);
+        denp[j-1][1] -> Rebin(rbPAP);
+        denn[j-1][1] -> Rebin(rbPAP);
+        nump[j-1][2] -> Rebin(rbPAP);
+        numn[j-1][2] -> Rebin(rbPAP);
+        denp[j-1][2] -> Rebin(rbPAP);
+        denn[j-1][2] -> Rebin(rbPAP);
 
 		// TODO: zapis licznika i mianownika dla CorrFita
 		//    outfileCF[j-1] = new TFile(Form("PAP_m%d_CorrFit.root",j-1),"recreate");	// plik wyjsciowy do corrfita
@@ -193,14 +198,14 @@ void getHist (const char* infilename, Int_t rWrite, int cent) {
 //     numn[j-1][2]->Write();
 //     denn[j-1][2]->Write();
 
-		double range = 0.5;
+		double range = 1.0;
 
         //if (j == 2) {
 
-                // nump[1][0]->Add(nump[1][0]);
-                // numn[1][0]->Add(numn[1][0]);
-                // denp[1][0]->Add(denp[1][0]);
-                // denn[1][0]->Add(denn[1][0]);
+        // nump[1][0]->Add(nump[1][0]);
+        // numn[1][0]->Add(numn[1][0]);
+        // denp[1][0]->Add(denp[1][0]);
+        // denn[1][0]->Add(denn[1][0]);
 		//out cf
 		Double_t norm = calculateNormalizationFactor(nump[j-1][0], denp[j-1][0]);
 		//    cout<<norm<<endl;
@@ -487,8 +492,8 @@ void getHist (const char* infilename, Int_t rWrite, int cent) {
 	sprintf(name,"%s_corrfun_ktAll.png",system);
 	//if (rWrite == 1)  c1->SaveAs("fig_template.eps");
 	if (rWrite == 1) {
-            c1->SaveAs("cfPAPnonID.png");
-            c1->SaveAs("cfPAPnonID.eps");
+        c1->SaveAs("cfPAPnonID.png");
+        c1->SaveAs("cfPAPnonID.eps");
     }
 }
 
@@ -554,8 +559,8 @@ void myPadSetUp(TPad *currentPad, float currentLeft=0.11, float currentTop=0.04,
 }
 
 void myGraphSetUp(TGraphErrors *currentGraph=0, Float_t currentMarkerSize = 1.0,
-		  int currentMarkerStyle=20, int currentMarkerColor=0,
-		  int currentLineStyle=1, int currentLineColor=0){
+                  int currentMarkerStyle=20, int currentMarkerColor=0,
+                  int currentLineStyle=1, int currentLineColor=0){
 	currentGraph->SetMarkerSize(currentMarkerSize);
 	currentGraph->SetMarkerStyle(currentMarkerStyle);
 	currentGraph->SetMarkerColor(currentMarkerColor);

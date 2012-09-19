@@ -211,6 +211,9 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
     TH1D* nump[11];
     TH1D* denp[11];
 
+    TH1D* numn[11];
+    TH1D* denn[11];
+
     int a = 1;
     char numName[100];
     char denName[100];
@@ -225,6 +228,9 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
 
     int multBins = 7;
     int rebin = 1;
+
+    const char* osl = "Long";   // Out, Side, Long
+    const char* sig = "P";     // P, N
 
     //mergowanie centralnosci:
     // 0 0-5
@@ -252,8 +258,8 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
             else if (strcmp(system,"PAP") == 0)	{
                 // sprintf(numName,"NumcqinvPAPtpcM%d",j);
 
-                sprintf(numName,"NumLongPckstarPAPtpcM%d",j);
-                sprintf(numNameN,"NumLongNckstarPAPtpcM%d",j);
+                sprintf(numName,"Num%s%sckstarPAPtpcM%d",osl,sig,j);
+                sprintf(numNameN,"Num%s%sckstarPAPtpcM%d",osl,sig,j);
             }
             if (strcmp(system,"PP") == 0)
                 sprintf(denName,"DencqinvPPtpcM%d",j);
@@ -262,8 +268,8 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
             else if (strcmp(system,"PAP") == 0)	{
                 // sprintf(denName,"DencqinvPAPtpcM%d",j);
 
-                sprintf(denName,"DenLongPckstarPAPtpcM%d",j);
-                sprintf(denNameN,"DenLongNckstarPAPtpcM%d",j);
+                sprintf(denName,"Den%s%sckstarPAPtpcM%d",osl,sig,j);
+                sprintf(denNameN,"Den%s%sckstarPAPtpcM%d",osl,sig,j);
             }
         }
         else {
@@ -274,8 +280,8 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
             else if (strcmp(system,"PAP") == 0)	{
                 // sprintf(numName,"NumcqinvPAPtpcM%dkT%d",j,kT);
 
-                sprintf(numName,"NumLongPckstarPAPtpcM%dkT%d",j,kT);
-                sprintf(numNameN,"NumLongNckstarPAPtpcM%dkT%d",j,kT);
+                sprintf(numName,"Num%s%sckstarPAPtpcM%dkT%d",osl,sig,j,kT);
+                sprintf(numNameN,"Num%s%sckstarPAPtpcM%dkT%d",osl,sig,j,kT);
             }
             if (strcmp(system,"PP") == 0)
                 sprintf(denName,"DencqinvPPtpcM%dkT%d",j,kT);
@@ -284,8 +290,8 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
             else if (strcmp(system,"PAP") == 0)	{
                 // sprintf(denName,"DencqinvPAPtpcM%dkT%d",j,kT);
 
-                sprintf(denName,"DenLongPckstarPAPtpcM%dkT%d",j,kT);
-                sprintf(denNameN,"DenLongNckstarPAPtpcM%dkT%d",j,kT);
+                sprintf(denName,"Den%s%sckstarPAPtpcM%dkT%d",osl,sig,j,kT);
+                sprintf(denNameN,"Den%s%sckstarPAPtpcM%dkT%d",osl,sig,j,kT);
             }
         }
 
@@ -295,8 +301,12 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
 
                 nump[j] = (TH1D*)f->Get(numName);
                 denp[j] = (TH1D*)f->Get(denName);
-                nump[j] ->Add( (TH1D*)f->Get(numNameN));
-                denp[j] ->Add( (TH1D*)f->Get(denNameN));
+
+                numn[j] = (TH1D*)f->Get(numNameN);
+                denn[j] = (TH1D*)f->Get(denNameN);
+
+                nump[j] ->Add( numn[j] );
+                denp[j] ->Add( denn[j] );
 
                 // }
                 // else {
@@ -329,6 +339,7 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
 
                 nump[0] ->Add( (TH1D*)f->Get(numName));
                 denp[0] ->Add( (TH1D*)f->Get(denName));
+
                 nump[0] ->Add( (TH1D*)f->Get(numNameN));
                 denp[0] ->Add( (TH1D*)f->Get(denNameN));
 
@@ -362,12 +373,12 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
                 nump[0]->Rebin(rebin);
                 denp[0]->Rebin(rebin);
 
-                nump[0]->Write();
+                // nump[0]->Write();
 
                 // TODO: zapis licznika i mianownika dla CorrFita
                 // TFile* outfileCF  = new TFile(Form("%s_m%d_CorrFit.root",system,j-1),"recreate");
-                // nump[0]->Write();
-                // denp[0]->Write();
+                nump[0]->Write();
+                denp[0]->Write();
 
                 Double_t norm = calculateNormalizationFactor(nump[0], denp[0],0.3,0.4);
                 nump[0]->Divide(denp[0]);
@@ -460,10 +471,12 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
         else if (j < merge2+1){
             if (strcmp(system,"PAP") == 0) {
                 // if ( j < 2) {
+
                 nump[merge1+1] ->Add( (TH1D*)f->Get(numName));
                 denp[merge1+1] ->Add( (TH1D*)f->Get(denName));
                 nump[merge1+1] ->Add( (TH1D*)f->Get(numNameN));
                 denp[merge1+1] ->Add( (TH1D*)f->Get(denNameN));
+
                 // }
                 // else {
                 //     nump[merge1+1] ->Add( (TH1D*)f2->Get(numName));
@@ -490,12 +503,12 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
                 nump[merge1+1]->Rebin(rebin);
                 denp[merge1+1]->Rebin(rebin);
 
-                nump[merge1+1]->Write();
+                // nump[merge1+1]->Write();
 
                 // TODO: zapis licznika i mianownika dla CorrFit'a
                 // TFile* outfileCF  = new TFile(Form("%s_m%d_CorrFit.root",system,j-1),"recreate");
-                // nump[merge1+1]->Write();
-                // denp[merge1+1]->Write();
+                nump[merge1+1]->Write();
+                denp[merge1+1]->Write();
 
                 Double_t norm = calculateNormalizationFactor(nump[merge1+1], denp[merge1+1],0.3,0.4);
                 nump[merge1+1]->Divide(denp[merge1+1]);
@@ -586,12 +599,12 @@ void drawCorrFun (const char* infilename, const char* system, const char* field,
                 nump[merge2+1]->Rebin(rebin);
                 denp[merge2+1]->Rebin(rebin);
 
-                nump[merge2+1]->Write();
+                // nump[merge2+1]->Write();
 
                 // TODO: zapis licznika i mianownika dla CorrFita
                 // TFile* outfileCF  = new TFile(Form("%s_m%d_CorrFit.root",system,j-1),"recreate");
-                // nump[merge2+1]->Write();
-                // denp[merge2+1]->Write();
+                nump[merge2+1]->Write();
+                denp[merge2+1]->Write();
 
                 Double_t norm = calculateNormalizationFactor(nump[merge2+1], denp[merge2+1],0.3,0.4);
                 nump[merge2+1]->Divide(denp[merge2+1]);
